@@ -82,7 +82,7 @@ def cli_download_model(
 ) -> None:
     local_dir.mkdir(parents=True, exist_ok=True)
 
-    cmd = ["hf", "download", model_id, "--local-dir", str(local_dir), "--local-dir-use-symlinks", "False"]
+    cmd = ["hf", "download", model_id, "--local-dir", str(local_dir)]
     if revision:
         cmd += ["--revision", revision]
     if resume:
@@ -132,9 +132,9 @@ def main():
     token = args.hf_token or os.environ.get("HF_TOKEN") or os.environ.get("HUGGINGFACE_HUB_TOKEN")
 
     if args.skip_download:
-        print("[hf-cli] skip_download=1, will not call huggingface-cli.")
+        print("skip_download=1, will not call huggingface-cli.")
     elif local_dir_has_weights(local_model_dir):
-        print(f"[hf-cli] Found existing weight files in {local_model_dir}; skipping download.")
+        print(f"Found existing weight files in {local_model_dir}; skipping download.")
     else:
         cli_download_model(
             model_id=args.model_id,
@@ -147,7 +147,7 @@ def main():
 
     load_dtype = {"float32": torch.float32, "float16": torch.float16, "bfloat16": torch.bfloat16}[args.load_dtype]
 
-    print(f"\n[load] loading model from local dir (CPU): {local_model_dir}")
+    print(f"\n  loading model from local dir (CPU): {local_model_dir}")
     cfg = AutoConfig.from_pretrained(local_model_dir, trust_remote_code=args.trust_remote_code)
     tok = AutoTokenizer.from_pretrained(local_model_dir, trust_remote_code=args.trust_remote_code)
 

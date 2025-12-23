@@ -140,7 +140,7 @@ def load_fp8_scaled_dequant_once(checkpoint_dir: Path, trust_remote_code: bool, 
     model = AutoModelForCausalLM.from_config(cfg, trust_remote_code=trust_remote_code)
     model.eval()
 
-    pack = torch.load(checkpoint_dir / "fp8_scaled_weights.pt", map_location="cpu")
+    pack = torch.load(checkpoint_dir / "fp8_scaled_weights.pt", map_location=device)
     for k in ("fp8_state", "scales", "schemes"):
         if k not in pack:
             raise ValueError(f"Invalid fp8 pack: missing key '{k}' in {checkpoint_dir/'fp8_scaled_weights.pt'}")
